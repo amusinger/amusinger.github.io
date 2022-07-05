@@ -91,9 +91,6 @@
 
     <link rel="canonical" href="https://zapis.kz/app" />
 
-
-  
-
   </head>
 
   <style>
@@ -113,7 +110,7 @@
       z-index: 10;
       position: relative;
       height: 100%;
-      background-image: url("/Users/aizhan/Desktop/work/zapiskz-landing-app/img/bg.png");
+      background-image: url("/img/bg.png");
       background-color: #ff8383;
       background-size: cover;
       background-repeat: no-repeat;
@@ -124,7 +121,7 @@
       display: flex;
       justify-content: center;
       margin-bottom: 40px;
-      margin-top: min(8vh, 60px);
+      margin-top: min(7vh, 60px);
     }
 
     h1 {
@@ -184,6 +181,7 @@
       font-size: 20px;
       line-height: 24px;
       margin: 0 auto;
+      text-decoration: none;
     }
 
     .promo__image {
@@ -201,6 +199,7 @@
       -webkit-animation-delay: 0;
       -webkit-animation-play-state: running;
       -webkit-animation-fill-mode: forwards;
+      max-height: 55vh;
     }
 
     @-webkit-keyframes silde_image {
@@ -227,7 +226,7 @@
       <h1>Записаться <br />- легко и быстро</h1>
 
       <div class="promo__btn-group">
-        <a href="">
+        <a href="https://play.google.com/store/apps/details?id=kz.zapis.client_app" id="androidLink">
           <img
             class="promo__image__phone"
             src="/img/google-play.png"
@@ -237,7 +236,7 @@
             height="27.79"
           />
         </a>
-        <a href="">
+        <a href="https://itunes.apple.com/us/app/zapis-kz/id1310410749" id="iosLink">
           <img
             class="promo__image__phone"
             src="/img/app-store.png"
@@ -246,7 +245,7 @@
             height="27.79"
           />
         </a>
-        <a href="">
+        <a href="https://appgallery.huawei.com/app/C106558931" id="huaweiLink">
           <img
             class="promo__image__phone"
             src="/img/huawei.png"
@@ -256,7 +255,7 @@
           />
         </a>
       </div>
-      <a class="promo__btn">
+      <button class="promo__btn" onclick="redirect()" id="mainLink">
         <svg
           width="19"
           height="19"
@@ -283,13 +282,100 @@
     </div>
 
     <script>
+
+      const adSource1 = '';
+      const adSource2 = '';
+      const adSource3 = '';
+
+      const appLink1 = '';
+      const appLink2 = '';
+      const appLink3 = '';
+
+      const postUrl = 'https://test-utm-api.free.beeceptor.com/test2';
+      const putUrl =  'https://test-utm-api.free.beeceptor.com/test-put';
+
+
       const userAgent = navigator.userAgent || navigator.vendor;
+      let iosLink = 'https://itunes.apple.com/us/app/zapis-kz/id1310410749';
+      let androidLink = 'https://play.google.com/store/apps/details?id=kz.zapis.client_app';
+      let huaweiLink = 'https://appgallery.huawei.com/app/C106558931';
+      var mainLink = androidLink;
+
+
+      let deviceType;
+
       if (/iPad|iPhone|iPod/.test(userAgent)) {
-        console.log("iphone");
+        deviceType = 'ios';
       } else if (/huawei/i.test(userAgent)) {
-        console.log("huawei");
+        deviceType = 'huawei';
       } else {
-        console.log("android");
+        deviceType = 'android';
+      }
+      document.getElementById("androidLink").href = androidLink;
+
+      const referrer = location.search;
+
+      if (referrer.includes('utm')) {
+        localStorage.setItem('user-referrer', referrer);
+        androidLink = 'https://play.google.com/store/apps/details?id=kz.zapis.client_app&amp;referrer=' + referrer;
+        document.getElementById("androidLink").href = androidLink;
+
+        const utmSource = referrer.split('&').find(el => el.includes('utm_source')).split('=')[1] || '';
+        const utmMedium = referrer.split('&').find(el => el.includes('utm_medium')).split('=')[1] || '';
+        const utmCampaign = referrer.split('&').find(el => el.includes('utm_campaign')).split('=')[1] || '';
+
+      if (deviceType === 'ios') {
+        if (utmSource.includes(adSource1)) {
+          iosLink = appLink1;
+        } else if (utmSource.includes(adSource2)) {
+          iosLink = appLink2;
+        } else if (utmSource.includes(adSource3)) {
+          iosLink = appLink3;
+        }
+        mainLink = iosLink;
+      } else if (deviceType === 'android') {
+        mainLink = androidLink;
+      } else {
+        mainLink = huaweiLink;
+      }
+      document.getElementById("iosLink").href = iosLink;
+
+      var responseId;
+
+      fetch(postUrl, {
+        method:"POST",
+        body: JSON.stringify({
+            utmSource: utmSource,
+            utmMedium: utmMedium,
+            utmCampaign: utmCampaign,
+            deviceType: userAgent,
+        })
+        }).then(res => {
+          if (!res.ok) {
+            throw Error(res.status);
+          }
+          return res.json();
+        }).then(responseBody => {
+          responseId = responseBody;
+        }).catch(e => {
+          console.log(e);
+        });
+      }
+
+      function redirect() {
+        fetch(putUrl, {
+            method: 'PUT',
+            body: JSON.stringify(responseId)
+        }).then(res => {
+          setTimeout(() => {
+            window.location.href = mainLink;
+          });
+        }).catch(e => {
+          console.log(e);
+          setTimeout(() => {
+            window.location.href = mainLink;
+          });
+        });
       }
     </script>
 
