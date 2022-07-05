@@ -162,7 +162,7 @@
       column-gap: 8.24px;
       height: 28px;
       margin-bottom: 12px;
-      margin-top: 50px;
+      margin-top: 40px;
     }
     .promo__btn {
       cursor: pointer;
@@ -301,8 +301,8 @@
       let huaweiLink = 'https://appgallery.huawei.com/app/C106558931';
       var mainLink = androidLink;
 
-
       let deviceType;
+      var responseId;
 
       if (/iPad|iPhone|iPod/.test(userAgent)) {
         deviceType = 'ios';
@@ -340,8 +340,6 @@
       }
       document.getElementById("iosLink").href = iosLink;
 
-      var responseId;
-
       fetch(postUrl, {
         method:"POST",
         body: JSON.stringify({
@@ -360,6 +358,14 @@
         }).catch(e => {
           console.log(e);
         });
+      } else {
+        if (deviceType === 'ios') {
+          mainLink = iosLink;
+        } else if (deviceType === 'android') {
+          mainLink = androidLink;
+        } else {
+          mainLink = huaweiLink;
+        }
       }
 
       function redirect() {
