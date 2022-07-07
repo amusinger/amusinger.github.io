@@ -409,7 +409,7 @@
         utmCampaign: utmCampaign,
         utmContent: utmContent,
         utmTerm: utmTerm,
-        deviceType: deviceType === "ios" ? deviceType.toUpperCase() : "ANDROID",
+        appType: deviceType === "ios" ? deviceType.toUpperCase() : "ANDROID",
       };
 
       fetch("/rest/clients-app/v2/app-referer", {
