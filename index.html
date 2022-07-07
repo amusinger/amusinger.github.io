@@ -275,13 +275,14 @@
         <span>Установить</span>
       </a>
       <div class="promo__image">
-        <img
-          class="promo__image__phone"
-          src="/images/mobile.png"
-          alt="Записаться в салон онлайн"
-          width="380"
-          height="470"
-        />
+        <picture>
+					<source type="image/webp" srcset="/images/mobile.webp"/>
+					<source type="image/png" srcset="/images/mobile.png" />
+					<img type="image/png" width="380" height="470" 
+            src="/images/mobile.png"
+            alt="Записаться в салон онлайн" />
+				</picture>
+
       </div>
     </div>
 
