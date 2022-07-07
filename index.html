@@ -226,41 +226,33 @@
       <h1>Записаться <br />- легко и быстро</h1>
 
       <div class="promo__btn-group">
-        <a
-          href="https://play.google.com/store/apps/details?id=kz.zapis.client_app"
-          id="androidLink"
-        >
-          <img
-            class="promo__image__phone"
-            src="/apps/images/google-play.png"
-            alt="Приложение zapis для android"
-            width="91.62"
-            height="27.79"
-          />
-        </a>
-        <a
-          href="https://itunes.apple.com/us/app/zapis-kz/id1310410749"
-          id="iosLink"
-        >
-          <img
-            class="promo__image__phone"
-            src="/apps/images/app-store.png"
-            alt="Приложение zapis для iOS"
-            width="82.35"
-            height="27.79"
-          />
-        </a>
-        <a href="https://appgallery.huawei.com/app/C106558931" id="huaweiLink">
-          <img
-            class="promo__image__phone"
-            src="/apps/images/huawei.png"
-            alt="Приложение zapis для huawei"
-            width="89.56"
-            height="27.79"
-          />
-        </a>
+        <img
+          onclick="redirect('android')"
+          class="promo__image__phone"
+          src="/apps/images/google-play.png"
+          alt="Приложение zapis для android"
+          width="91.62"
+          height="27.79"
+        />
+
+        <img
+          onclick="redirect('ios')"
+          class="promo__image__phone"
+          src="/apps/images/app-store.png"
+          alt="Приложение zapis для iOS"
+          width="82.35"
+          height="27.79"
+        />
+        <img
+          onclick="redirect('huawei')"
+          class="promo__image__phone"
+          src="/apps/images/huawei.png"
+          alt="Приложение zapis для huawei"
+          width="89.56"
+          height="27.79"
+        />
       </div>
-      <button class="promo__btn" onclick="redirect()" id="mainLink">
+      <button class="promo__btn" onclick="redirect('main')" id="mainLink">
         <svg
           width="19"
           height="19"
@@ -400,8 +392,6 @@
           mainLink = huaweiLink;
         }
       }
-      document.getElementById("iosLink").href = iosLink;
-      document.getElementById("androidLink").href = androidLink;
 
       body = {
         utmSource: utmSource,
@@ -412,7 +402,7 @@
         appType: deviceType === "ios" ? deviceType.toUpperCase() : "ANDROID",
       };
 
-      fetch("/rest/clients-app/v2/app-referer", {
+      fetch("/rest/clients-app/v2/app-referers", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -432,10 +422,27 @@
           console.log(e);
         });
 
-      function redirect() {
+      function redirect(type) {
+        let redirectLink = mainLink;
+        switch (type) {
+          case "main":
+            redirectLink = mainLink;
+            break;
+          case "ios":
+            redirectLink = iosLink;
+            break;
+          case "android":
+            redirectLink = androidLink;
+            break;
+          case "huawei":
+            redirectLink = huaweiLink;
+            break;
+          default:
+            redirectLink = mainLink;
+        }
         if (userId) {
           fetch(
-            `/rest/clients-app/v2/app-referer/${userId}/install-button-clicked`,
+            `/rest/clients-app/v2/app-referers/${userId}/install-button-clicked`,
             {
               method: "PUT",
               headers: {
@@ -446,18 +453,18 @@
           )
             .then((res) => {
               setTimeout(() => {
-                window.location.href = mainLink;
+                window.location.href = redirectLink;
               });
             })
             .catch((e) => {
               console.log(e);
               setTimeout(() => {
-                window.location.href = mainLink;
+                window.location.href = redirectLink;
               });
             });
         } else {
           setTimeout(() => {
-            window.location.href = mainLink;
+            window.location.href = redirectLink;
           });
         }
       }
