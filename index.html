@@ -327,10 +327,8 @@
       } else {
         deviceType = "android";
       }
-      document.getElementById("androidLink").href = androidLink;
 
       const referrer = location.search;
-
       localStorage.setItem("user-referrer", referrer);
 
       const utmSource = referrer.includes("utm_source")
@@ -364,20 +362,23 @@
             .split("=")[1]
         : "";
       if (referrer.includes("utm")) {
+        androidLink =
+          "https://play.google.com/store/apps/details?id=kz.zapis.client_app&amp;referrer=" +
+          referrer;
         if (deviceType === "ios") {
-          if (utmCampaign.toLowerCase().includes(adSource1)) {
+          if (referrer.toLowerCase().includes(adSource1)) {
             if (utmSource.toLowerCase().includes("facebook")) {
               iosLink = appFbLink1;
             } else {
               iosLink = appGaLink1;
             }
-          } else if (utmSource.toLowerCase().includes(adSource2)) {
+          } else if (referrer.toLowerCase().includes(adSource2)) {
             if (utmSource.toLowerCase().includes("facebook")) {
               iosLink = appFbLink2;
             } else {
               iosLink = appGaLink2;
             }
-          } else if (utmSource.toLowerCase().includes(adSource3)) {
+          } else if (referrer.toLowerCase().includes(adSource3)) {
             if (utmSource.toLowerCase().includes("facebook")) {
               iosLink = appFbLink3;
             } else {
@@ -390,9 +391,6 @@
         } else {
           mainLink = huaweiLink;
         }
-        androidLink =
-          "https://play.google.com/store/apps/details?id=kz.zapis.client_app&amp;referrer=" +
-          referrer;
       } else {
         if (deviceType === "ios") {
           mainLink = iosLink;
@@ -402,8 +400,8 @@
           mainLink = huaweiLink;
         }
       }
-      document.getElementById("androidLink").href = androidLink;
       document.getElementById("iosLink").href = iosLink;
+      document.getElementById("androidLink").href = androidLink;
 
       body = {
         utmSource: utmSource,
