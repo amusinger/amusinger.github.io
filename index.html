@@ -320,8 +320,7 @@
         deviceType = "android";
       }
 
-      const referrer = location.search;
-      localStorage.setItem("user-referrer", referrer);
+      let referrer = location.search;
 
       const utmSource = referrer.includes("utm_source")
         ? referrer
@@ -353,7 +352,13 @@
             .find((el) => el.includes("utm_term"))
             .split("=")[1]
         : "";
+
       if (referrer.includes("utm")) {
+        referrer = location.search
+          ? location.search.replace(/=/g, "%3D").replace(/&/g, "%26")
+          : "";
+        localStorage.setItem("user-referrer", referrer);
+
         androidLink =
           "https://play.google.com/store/apps/details?id=kz.zapis.client_app&amp;referrer=" +
           referrer;
