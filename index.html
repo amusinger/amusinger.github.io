@@ -304,7 +304,7 @@
       const userAgent = navigator.userAgent || navigator.vendor;
       let iosLink = "https://itunes.apple.com/us/app/zapis-kz/id1310410749";
       let androidLink =
-        "https://play.google.com/store/apps/details?id=kz.zapis.client_app";
+        "https://play.google.com/store/apps/details?id=kz.zapis.client_app&referrer=utm_source%3Dzapis.kz%26utm_medium%3Dapps";
       let huaweiLink = "https://appgallery.huawei.com/app/C106558931";
       var mainLink = androidLink;
 
@@ -355,12 +355,15 @@
 
       if (referrer.includes("utm")) {
         referrer = location.search
-          ? location.search.replace(/=/g, "%3D").replace(/&/g, "%26")
+          ? location.search
+              .substring(1)
+              .replace(/=/g, "%3D")
+              .replace(/&/g, "%26")
           : "";
         localStorage.setItem("user-referrer", referrer);
 
         androidLink =
-          "https://play.google.com/store/apps/details?id=kz.zapis.client_app&amp;referrer=" +
+          "https://play.google.com/store/apps/details?id=kz.zapis.client_app&referrer=" +
           referrer;
         if (deviceType === "ios") {
           if (referrer.toLowerCase().includes(adSource1)) {
