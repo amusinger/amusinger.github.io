@@ -333,7 +333,7 @@
       const userAgent = navigator.userAgent || navigator.vendor;
       let iosLink = "https://itunes.apple.com/us/app/zapis-kz/id1310410749";
       let androidLink =
-        "https://play.google.com/store/apps/details?id=kz.zapis.client_app&referrer=utm_source%3Dzapis.kz%26utm_medium%3Dapps";
+        "https://play.google.com/store/apps/details?id=kz.zapis.client_app&utm_source=zapis.kz?utm_medium=apps&referrer=utm_source%3Dzapis.kz%26utm_medium%3Dapps";
       let huaweiLink = "https://appgallery.huawei.com/app/C106558931";
       var mainLink = androidLink;
 
@@ -391,9 +391,9 @@
           : "";
         localStorage.setItem("user-referrer", referrer);
 
-        androidLink =
-          "https://play.google.com/store/apps/details?id=kz.zapis.client_app&referrer=" +
-          referrer;
+        androidLink = `https://play.google.com/store/apps/details?id=kz.zapis.client_app&${location.search.substring(
+          1
+        )}&referrer=${referrer}`;
         if (deviceType === "ios") {
           if (referrer.toLowerCase().includes(adSource1)) {
             if (utmSource.toLowerCase().includes("facebook")) {
